@@ -33,3 +33,6 @@ let m = 8;
 m++;    //1증가, 1감소할 때는 ++, --가 빠름
 // m += 1;
 console.log(`m: ${m}`);
+
+const str = 'hello' * 5.5; 
+console.log(`str : ${str}`);
