@@ -23,7 +23,8 @@
 alert("[ 1 ~ 50 사이의 무작위 숫자를 10번 안에 맞춰보세요!!!!!!!!");
 
 let a = Math.floor(Math.random() * 50) + 1;
-let cnt = 10;
+let cnt = 5;
+let initCnt = cnt;
 
 let i = 1;
 
@@ -35,27 +36,22 @@ while (i <= cnt) {
     alert(`범위 안의 값을 입력하세요!`);
     continue;
   }
+  cnt--;
   if (a === b) {
-    alert(`정답!!\n${cnt}번 남기고 맞췄네요?`);
+    alert(`정답!!\n${initCnt}번만에 맞췄습니다.`);
     break;
   } else {
     if (a < b) {
-      cnt--;
       alert(`DOWN!!\n${cnt}번 남았어요~\n`);
       max = b - 1;
-      if (cnt === 0) {
-        alert("님 졌음");
-        break;
-      }
     } else {
-      cnt--;
       alert(`UP!!\n${cnt}번 남았어요~`);
       min = b + 1;
-      if (cnt === 0) {
-        alert("님 졌음");
-        break;
-      }
     }
+  }
+  if (cnt === 0) {
+    alert(`님 졌음 정답은 ${a}였습니다~`);
+    break;
   }
 }
 
