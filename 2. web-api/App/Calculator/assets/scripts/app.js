@@ -46,13 +46,13 @@ const calculate = (type) => {
     currnetResult += enteredNumber;
   } else if (type === 'SUB') {
     mark = '-';
-    currnetResult += enteredNumber;
+    currnetResult -= enteredNumber;
   } else if (type === 'MUL') {
     mark = 'x';
-    currnetResult += enteredNumber;
+    currnetResult *= enteredNumber;
   } else {
     mark = '/';
-    currnetResult += enteredNumber;
+    currnetResult /= enteredNumber;
   }
   console.log(`${mark} button click`);
 
