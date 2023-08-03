@@ -41,9 +41,10 @@ const closeAddModal = () => {
 };
 
 /** 화면에 새로운 영화 정보를 렌더링하는 함수 */
-const renderNewMovie = ({ title, image, rating }) => {
+const renderNewMovie = ({ id, title, image, rating }) => {
   const $newMovie = document.createElement('li');
   $newMovie.classList.add('movie-element');
+  $newMovie.dataset.movieId = id;
 
   $newMovie.innerHTML = `
     <div class="movie-element__image">
@@ -55,8 +56,54 @@ const renderNewMovie = ({ title, image, rating }) => {
     </div>
   `;
 
+  // 삭제를 진행하는 핸들러
+  const deleteMovieHandler = e => {
+    // 배열에서도 영화 정보를 지워야 함!
+    // 클릭한 태그의 근처 li의 movie-id값 가져오기
+    const movieId = e.target.closest('.movie-element').dataset.movieId;
+    console.log(movieId);
+
+    // 배열에서 해당 아이디앖을 가지는 객체를 찾아내고 인덱스 알아내기
+    // let index = -1;
+    // for (let i = 0; i < movies.length; i++) {
+    //   if (m.id === movieId) {
+    //     index = i;
+    //     break;
+    //   }
+    // }
+
+    // 대상의 인덱스 찾기
+    // indexOf : 원시타입 (숫자, 문자열)만 찾을 수 있음
+    const index = movies.findIndex(m => m.id === movieId);
+
+    console.log(`클릭대상 인덱스 : ${index}`);
+
+    // 그 객체를 배열에서 지우기
+    movies.splice(index, 1);
+
+    //실제 li 지우기
+    e.target.closest('.movie-element').remove();
+  }
+
+  // 삭제 클릭 이벤트
+  $newMovie.addEventListener('click', deleteMovieHandler);
+
   $movieList.appendChild($newMovie);
 };
+
+/** 영화 정보 입력란 검증 */
+const validateMovieInput = ({ title, image, rating }) => {
+  if (
+    title.trim() === '' ||
+    image.trim() === '' ||
+    rating.trim() === '' ||
+    +rating < 1 || +rating > 5
+  ) {
+    return false;
+  }
+  return true;
+}
+
 
 // ===== 이벤트 핸들러 및 이벤트 바인딩 ===== //
 
@@ -68,11 +115,18 @@ const addMovieHandler = e => {
 
   // 객체로 묶기
   const newMovie = {
+    id: Math.random().toString(),
     title: titleValue,
     image: imgUrlValue,
     rating: ratingValue
   };
-  // console.log(newMovie);
+
+  if (!validateMovieInput(newMovie)) {
+    alert('입력값이 유효하지 않습니다!');
+    return;
+  }
+  console.log(newMovie);
+
   movies.push(newMovie);
   console.log(movies);
 
