@@ -15,6 +15,27 @@ console.log(p1);
 const p2 = new Product('아이폰 14', 'https://img.danawa.com/prod_img/500000/393/816/img/17816393_1.jpg?shrink=500:500', 1200000, '상당한 스펙의 스마트폰');
 console.log(p2);
 
+
+// 화면 가장 상단부에 들어갈 장바구니 총액 정보 생성 클래스
+class ShoppingCart {
+  constructor() {
+    // 담은 Product들을 저장
+    this.cartItems = [
+
+    ];
+  }
+
+  render() {
+    const $cart = document.createElement('section');
+    $cart.classList.add('cart');
+    $cart.innerHTML = `
+      <h2>총액 0원</h2>
+      <button>주문하기</button>
+    `;
+    return $cart;
+  }
+}
+
 // 한 개의 li태그를 생성하는 컴포넌트 클래스 설계
 class ProductItem {
   constructor(product) {
@@ -78,21 +99,29 @@ class ProductList {
   }
   render() {
     // console.log('render!!', this);
-    const $app = document.getElementById('app');
     const $prodList = document.createElement('ul');
     $prodList.classList.add('product-list');
     this.products.forEach(prod => {
       const productItem = new ProductItem(prod);
-      $prodList.appendChild(productItem.render());
       // console.log(productItem);
+      $prodList.appendChild(productItem.render());
     });
-    $app.appendChild($prodList);
+    return $prodList;
   }
 }
 
-// 상품 목록에 대한 객체
+// ShoppingCart와 ProductList를 함쳐서 렌더링처리하는 클래스
+class Shop {
+  constructor() {
+    this.render();
+  }
+  render() {
+    const $app = document.getElementById('app');
+    $app.appendChild(new ShoppingCart().render());
+    $app.appendChild(new ProductList().render());
+  }
+}
 
 
 // 렌더링 명령
-const productList = new ProductList();
-productList.render();
+new Shop();
