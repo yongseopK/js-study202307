@@ -2,11 +2,11 @@
 // 하나의 상품 객체에 대한 설계도
 class Product {
   // 객체를 만들 때 초기값을 세팅하는 용도
-  constructor(title, imageUrl, price, description) {
+  constructor(title, imageUrl, price, desc) {
     this.title = title;
     this.imageUrl = imageUrl;
     this.price = price;
-    this.description = description;
+    this.description = desc;
   }
 }
 // 객체 생성
@@ -15,30 +15,58 @@ console.log(p1);
 const p2 = new Product('아이폰 14', 'https://img.danawa.com/prod_img/500000/393/816/img/17816393_1.jpg?shrink=500:500', 1200000, '상당한 스펙의 스마트폰');
 console.log(p2);
 
+// 속성 객체를 만드는 클래스
+class Attribute {
+  constructor(name, value) {
+    this.name = name;
+    this.value = value;
+  }
+}
+// DOM을 생성하는 공통 클래스
+class Component {
+  // tagId : 부모태그 역할을 할 태그의 id속성 값
+  constructor(tagId) {
+    this.tagId = tagId;
+  }
+  // 태그를 생성하는 함수
+  // classnames = 'box blue circle'
+  createElement(tagName = '', classnames = '', childHtml = '', attributes = []) {
+    const $newTag = document.createElement(tagName);
+    if (classnames) $newTag.className = classnames;
+    if (attributes && attributes.length > 0) {
+      attributes.forEach(attr => {
+        $newTag.setAttribute(attr.name, attr.value);
+      });
+    }
+    if (childHtml) $newTag.innerHTML = childHtml;
+    document.getElementById(this.tagId).appendChild($newTag);
+    return $newTag;
+  }
+}
 
 // 화면 가장 상단부에 들어갈 장바구니 총액 정보 생성 클래스
-class ShoppingCart {
-  constructor() {
+class ShoppingCart extends Component {
+  constructor(tagId) {
+    super(tagId)
     // 담은 Product들을 저장
-    this.cartItems = [
-
-    ];
+    this.cartItems = [];
   }
 
   render() {
-    const $cart = document.createElement('section');
-    $cart.classList.add('cart');
-    $cart.innerHTML = `
+    const childHtml = `
       <h2>총액 0원</h2>
-      <button>주문하기</button>
-    `;
-    return $cart;
+      <button>주문하기</button>`;
+    this.createElement('section', 'cart', childHtml, [
+      new Attribute('id', 'cart-id'),
+      new Attribute('title', 'add to cart')
+    ]);
   }
 }
 
 // 한 개의 li태그를 생성하는 컴포넌트 클래스 설계
-class ProductItem {
-  constructor(product) {
+class ProductItem extends Component {
+  constructor(product, tagId) {
+    super(tagId);
     this.product = product;
   }
 
@@ -49,19 +77,19 @@ class ProductItem {
     // 이 핸들러에서 누른 그 상품의 정보를 알야한다.
   }
   render() {
-    const $prod = document.createElement('li');
-    $prod.classList.add('product-item');
-    $prod.innerHTML = `
-          <div>
-            <img src="${this.product.imageUrl}" alt="${this.product.title}">
-            <div class="product-item__content">
-              <h2>${this.product.title}</h2>
-              <h3>${this.product.price}원</h3>
-              <p>${this.product.description}</p>
-              <button>담기</button>
-            </div>
-          </div>
-        `;
+    const childHtml = `
+    <div>
+      <img src="${this.product.imageUrl}" alt="${this.product.title}">
+      <div class="product-item__content">
+        <h2>${this.product.title}</h2>
+        <h3>${this.product.price}원</h3>
+        <p>${this.product.description}</p>
+        <button>담기</button>
+      </div>
+    </div>
+    `;
+
+    const $prod = this.createElement('li', 'product-item', childHtml);
 
     const $addCartBtn = $prod.querySelector('button');
     // $addCartBtn.addEventListener('click', this.addToCartHandler.bind(this));
@@ -71,8 +99,9 @@ class ProductItem {
 }
 
 // 한 개의 UL을 생성하는 클래스
-class ProductList {
-  constructor() {
+class ProductList extends Component {
+  constructor(tagId) {
+    super(tagId);
     // 상품들을 모아 놓은 배열
     this.products = [
       p1,
@@ -98,30 +127,26 @@ class ProductList {
     ]
   }
   render() {
-    // console.log('render!!', this);
-    const $prodList = document.createElement('ul');
-    $prodList.classList.add('product-list');
+    this.createElement('ul', 'product-list', '', [
+      new Attribute('id', 'prod-list')
+    ]);
+
     this.products.forEach(prod => {
-      const productItem = new ProductItem(prod);
-      // console.log(productItem);
-      $prodList.appendChild(productItem.render());
+      new ProductItem(prod, 'prod-list').render();
     });
-    return $prodList;
   }
 }
 
-// ShoppingCart와 ProductList를 함쳐서 렌더링처리하는 클래스
+// ShoppingCart와 ProductList를 합쳐서 렌더링처리하는 클래스
 class Shop {
   constructor() {
     this.render();
   }
   render() {
-    const $app = document.getElementById('app');
-    $app.appendChild(new ShoppingCart().render());
-    $app.appendChild(new ProductList().render());
+    new ShoppingCart('app').render();
+    new ProductList('app').render();
   }
 }
-
 
 // 렌더링 명령
 new Shop();
