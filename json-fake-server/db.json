@@ -1,41 +1,5 @@
 {
-  "posts": [
-    {
-      "id": 1,
-      "title": "냠냠냠 쩝쩝쩝",
-      "body": "zsdssawqdjmqwdiodjmnqwo"
-    },
-    {
-      "id": 2,
-      "title": "뽀로로루리리르리",
-      "body": "ㅇㅈ붱ㅂㅈ우뱅ㅂㅈ즈ㅐㅣ"
-    },
-    {
-      "title": "하하호호히히",
-      "body": "ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ\nㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ",
-      "id": 3
-    },
-    {
-      "title": "ㄴㅇㄴㅁㅇㅂㅈ",
-      "body": "ㄹㄷㅈㄹㅁㄴㅇㄴㅁ",
-      "id": 4
-    },
-    {
-      "title": "dwqdqw",
-      "body": "dqwdq",
-      "id": 5
-    },
-    {
-      "title": "11",
-      "body": "11",
-      "id": 6
-    },
-    {
-      "title": "21",
-      "body": "21",
-      "id": 7
-    }
-  ],
+  "posts": [],
   "users": [
     {
       "id": 1,
