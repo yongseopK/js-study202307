@@ -32,5 +32,17 @@
       "account": "ggg999",
       "userName": "구구콘"
     }
+  ],
+  "todos": [
+    {
+      "text": "ㅇㅂㅇㅇㅇㅇㅂㅈㅈ",
+      "done": false,
+      "id": 1
+    },
+    {
+      "text": "321",
+      "done": true,
+      "id": 2
+    }
   ]
 }
