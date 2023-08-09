@@ -43,6 +43,17 @@
       "text": "321",
       "done": true,
       "id": 2
+    },
+    {
+      "text": "ㅇㅈㅇ",
+      "done": false,
+      "id": 3
+    },
+    {
+      "text": "www",
+      "done": false,
+      "redirect": "manual",
+      "id": 4
     }
   ]
 }
