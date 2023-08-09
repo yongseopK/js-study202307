@@ -74,6 +74,9 @@ const renderTodos = (todoList) => {
 
 // ========== 이벤트 관련 함수 ========== //
 
+// step 2. 할 일 등록 기능
+const $addBtn = document.getElementById('add');
+
 const addTodoHandler = e => {
   // 1. 클릭 이벤트가 잘 일어나나
   // console.log(('클릭!'));
@@ -101,9 +104,27 @@ const addTodoHandler = e => {
     });
 };
 
-// step 2. 할 일 등록 기능
-const $addBtn = document.getElementById('add');
 $addBtn.addEventListener('click', addTodoHandler);
+
+// step 3. 할 일 삭제 기능
+
+const deleteTodoHandler = e => {
+  if (!e.target.matches(".remove span")) return;
+  // 특정 할 일을 지우기 위해 클릭한 할 일의 id를 알아내야 함
+  const id = e.target.closest('.todo-list-item').dataset.id;
+  // console.log(id);
+
+  // 서버에 삭제 요청하기
+  fetchTodos(`${URL}/${id}`, 'DELETE')
+    .then(res => {
+      if (res.status === 200) {
+        console.log('삭제 성공');
+      } else {
+        console.log('삭제 실패');
+      }
+    })
+};
+$todoList.addEventListener('click', deleteTodoHandler);
 
 
 // ================= 앱 실행 =================//

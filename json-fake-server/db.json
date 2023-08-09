@@ -33,27 +33,5 @@
       "userName": "구구콘"
     }
   ],
-  "todos": [
-    {
-      "text": "ㅇㅂㅇㅇㅇㅇㅂㅈㅈ",
-      "done": false,
-      "id": 1
-    },
-    {
-      "text": "321",
-      "done": true,
-      "id": 2
-    },
-    {
-      "text": "ㅇㅈㅇ",
-      "done": false,
-      "id": 3
-    },
-    {
-      "text": "www",
-      "done": false,
-      "redirect": "manual",
-      "id": 4
-    }
-  ]
+  "todos": []
 }
