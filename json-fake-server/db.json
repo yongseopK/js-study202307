@@ -33,5 +33,16 @@
       "userName": "구구콘"
     }
   ],
-  "todos": []
+  "todos": [
+    {
+      "text": "나는 집에 가고싶다",
+      "done": false,
+      "id": 2
+    },
+    {
+      "text": "dasda",
+      "done": false,
+      "id": 3
+    }
+  ]
 }

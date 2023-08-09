@@ -20,26 +20,6 @@ const $todoList = document.querySelector(".todo-list");
 // form 태그
 const $addForm = document.querySelector(".todo-insert");
 
-// 1.
-// fetch(URL)
-//     .then((res) => res.json())
-//     .then((postList) => {
-//         const $postTemplate = document.getElementById("single-post");
-
-//         postList.forEach(({ id, text }) => {
-//             // 템플릿태그에서 li태그를 추출
-//             const $postLi = document.importNode($postTemplate.content, true);
-
-//             $postLi.querySelector("li").dataset.postId = id;
-//             $postLi.querySelector("li").setAttribute("done", "false");
-//             $postLi.querySelector("span").textContent = text;
-
-
-//             $postUl.appendChild($postLi);
-
-//         })
-//     });
-
 const fetchTodos = (url, method = 'GET', payload = null) => {
   const requestInit = {
     method: method,
@@ -110,6 +90,8 @@ $addBtn.addEventListener('click', addTodoHandler);
 
 const deleteTodoHandler = e => {
   if (!e.target.matches(".remove span")) return;
+
+  if (!confirm('진짜?')) return;
   // 특정 할 일을 지우기 위해 클릭한 할 일의 id를 알아내야 함
   const id = e.target.closest('.todo-list-item').dataset.id;
   // console.log(id);
@@ -126,6 +108,66 @@ const deleteTodoHandler = e => {
 };
 $todoList.addEventListener('click', deleteTodoHandler);
 
+// step 4. 할 일 완료 체크 처리
+const checkTodoHandler = e => {
+  // console.log('체크박스 누름', e.target);
+
+  // 1. 서버에 수정 요청을 보내서 누른 그 할 일의 done을 반대값으로 수정해야 함.
+  // 1-1. 현재 체크값인 t, f인이 알아야 반대로 바꾸든 말든;
+  // console.log(e.target.checked); // 현재상태지 이전상태가 아니다..!
+
+  const id = e.target.closest('.todo-list-item').dataset.id;
+  fetchTodos(`${URL}/${id}`, 'PATCH', {
+    done: e.target.checked,
+  });
+};
+
+$todoList.addEventListener('change', checkTodoHandler);
+
+
+// step 5. 할 일 수정
+
+// 수정 모드 진입하는 함수
+const enterModifyMode = ($undo) => {
+  // 클래스 이름을 변경하여 아이콘을 바꾸자
+  // -> 클릭한 span태그 노드를 가져와야 함.
+  $undo.classList.replace('lnr-undo', 'lnr-checkmark-circle');
+
+  // $undo근처에 있는 span.text를 가져와야 함.
+  const $textSpan = $undo.closest('.todo-list-item').querySelector('.text');
+
+  // 교체할 input을 생성
+  const $modInput = document.createElement('input');
+  $modInput.classList.add('modify-input');
+  $modInput.setAttribute('type', 'text');
+  $modInput.value = $textSpan.textContent;
+
+  // span을 input으로 교체하기
+  const $label = $textSpan.parentNode;
+  $label.replaceChild($modInput, $textSpan);
+};
+
+const modifyTodo = ($checkMark) => {
+  const $li = $checkMark.closest('.todo-list-item');
+  const id = $li.dataset.id;
+  const newText = $li.querySelector('.modify-input').value;
+
+  fetchTodos(`${URL}/${id}`, 'PATCH', {
+    text: newText
+  })
+};
+
+
+// 수정 이벤트 처리 핸들러
+const modifyTodoHandler = e => {
+  if (e.target.matches('.modify span.lnr-undo')) {
+    enterModifyMode(e.target); // 수정 모드 진입하기
+  } else if (e.target.matches('.modify span.lnr-checkmark-circle')) {
+    modifyTodo(e.target); // 서버에 수정 요청 보내기
+  }
+};
+$todoList.addEventListener('click', modifyTodoHandler);
+
 
 // ================= 앱 실행 =================//
 const init = () => {
@@ -137,110 +179,3 @@ const init = () => {
 };
 
 init();
-
-// // 2.
-// $addForm.addEventListener("submit", (e) => {
-//   e.preventDefault();
-//   const payload = {
-//     text: document.querySelector('#todo-text').value,
-//     done: false,
-//   };
-
-//   // fetch로 POST요청 보내는법
-//   fetch(URL, {
-//     method: "POST",
-//     headers: {
-//       "content-type": "application/json",
-//     },
-//     body: JSON.stringify(payload),
-//   }).then((res) => {
-//     if (res.status === 200 || res.status === 201) {
-//       alert("등록 성공!");
-//     } else {
-//       alert("등록 실패!");
-//     }
-//   });
-// });
-
-// 3. 
-// 삭제 클릭하면 벌어질 일들에 대한 함수
-// const deletePostHandler = (e) => {
-//   if (!e.target.matches(".remove span")) return;
-
-//   // 삭제 클릭 대상 아이디 잡아오기
-//   console.log("삭제 클릭!");
-//   const id = e.target.closest(".todo-list-item").dataset.postId;
-//   fetch(`${URL}/${id}`, {
-//     method: "DELETE",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   }).then((res) => {
-//     if (res.status === 200) {
-//       alert("삭제 성공!");
-//     } else {
-//       alert("삭제 실패!");
-//     }
-//   });
-// };
-
-// // 삭제 이벤트 등록
-// $postUl.addEventListener("click", deletePostHandler);
-
-// 4.
-// // done 바꾸기
-// const patchPostHandelr = (e) => {
-//     if (!e.target.matches(".checkbox input")) return;
-
-//     // 수정 클릭 대상 아이디 잡아오기
-//     console.log("수정 클릭!");
-//     const id = e.target.closest(".todo-list-item").dataset.postId;
-
-//     const currentDoneValue = e.target.checked;
-//     const newDoneValue = !currentDoneValue;
-
-//     fetch(`${URL}/${id}`, {
-//         method: "PATCH",
-//         headers: {
-//             "Content-Type": "application/json",
-//         },
-//         body: JSON.stringify({
-//             done: newDoneValue,
-//         })
-//     }).then((res) => res.json())
-//         .then((data) => console.log(data));
-
-//     // 업데이트된 done 값에 따라 UI 업데이트
-//     const $postLi = e.target.closest(".todo-list-item");
-//     const $textSpan = $postLi.querySelector(".text");
-//     $textSpan.classList.toggle("done", newDoneValue); // "done" 클래스 추가 또는 제거
-
-//     // 선택사항으로, 체크박스 상태 업데이트
-//     // e.target.checked = newDoneValue;
-
-// }
-
-
-// $postUl.addEventListener('change', patchPostHandelr);
-
-// 5. 
-// const fixPostHandler = (e) => {
-//   if (!e.target.matches(".modify span")) return;
-
-//   console.log("수정 클릭!");
-//   const id = e.target.closest(".todo-list-item").dataset.postId;
-
-  // fetch(`${URL}/${id}`, {
-  //     method: "PATCH",
-  //     headers: {
-  //         "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-
-  //     }),
-
-  // })
-//}
-
-
-// $postUl.addEventListener('click', fixPostHandler);

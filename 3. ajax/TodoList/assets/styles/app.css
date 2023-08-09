@@ -111,7 +111,6 @@ section.todo-template .content .todo-list .todo-list-item .checkbox .modify-inpu
     box-sizing: border-box;
     font-size: 12px;
     width: 200px;
-    display: none;
 }
 section.todo-template .content .todo-list .todo-list-item .checkbox .modify-input:focus {
     outline: #e20;
