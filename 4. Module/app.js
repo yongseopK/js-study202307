@@ -1,5 +1,5 @@
 import { $btn } from './getDOM.js';
-import ABC, { clickHandler as ch } from './event.js'
+import ABC, { clickHandler as ch } from './event.js';
 
 const init = () => {
   $btn.style.background = 'aqua';
