@@ -35,12 +35,17 @@
   ],
   "todos": [
     {
-      "text": "나는 집에 가고싶다",
+      "text": "가나다",
+      "done": false,
+      "id": 1
+    },
+    {
+      "text": "ㄹㄹㄹㄹㄹ",
       "done": false,
       "id": 2
     },
     {
-      "text": "dasda",
+      "text": "dwq",
       "done": false,
       "id": 3
     }

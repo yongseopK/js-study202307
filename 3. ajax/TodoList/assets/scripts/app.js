@@ -50,6 +50,7 @@ const renderTodos = (todoList) => {
 
     $todoList.appendChild($newLi);
   });
+  displayTodoCount();
 };
 
 // ========== 이벤트 관련 함수 ========== //
@@ -57,34 +58,65 @@ const renderTodos = (todoList) => {
 // step 2. 할 일 등록 기능
 const $addBtn = document.getElementById('add');
 
+
+
 const addTodoHandler = e => {
-  // 1. 클릭 이벤트가 잘 일어나나
-  // console.log(('클릭!'));
+  if (e.type === "click" || (e.type === "keydown" && e.key === 'Enter')) {
+    const pattern = /\s/g;
+    // 1. 클릭 이벤트가 잘 일어나나
+    // console.log(('클릭!'));
 
-  // 2. 클릭하면 일단 왼쪽에 인푹의 텍스트를 읽어야함
-  // 2-1. 인풋부터 찾기
-  const $textInput = document.getElementById('todo-text');
-  // 2-2. 인풋 안에있는 텍스트를 꺼내기
-  const inputText = $textInput.value;
+    // 2. 클릭하면 일단 왼쪽에 인푹의 텍스트를 읽어야함
+    // 2-1. 인풋부터 찾기
+    const $textInput = document.getElementById('todo-text');
+    // 2-2. 인풋 안에있는 텍스트를 꺼내기
+    const inputText = $textInput.value;
+    const trimInputText = inputText.split(' ').join('');
 
-  // 3. 그럼 서버에 이 데이터를 보내서 저장을 해야하는데
-  // -> fetch가 필요하겠다. 저장이니깐 POST해야겠다.
-  // -> payload를 API 스펙에 맞게 만들어 보내야 함
-  const payload = {
-    text: inputText,
-    done: false,
-  }
-  fetchTodos(URL, 'POST', payload)
-    .then(res => {
-      if (res.status === 200 || res.status === 201) {
-        console.log('성공');
+    if (trimInputText.length < 30) {
+      if (trimInputText.match(pattern) || trimInputText === '') {
+        e.preventDefault();
+        $textInput.value = '';
+        $textInput.style.background = 'red';
+        $textInput.style.color = 'white';
+        $textInput.placeholder = '공백은 허용되지 않습니다.';
       } else {
-        console.log('실패');
+        e.preventDefault();
+        // 3. 그럼 서버에 이 데이터를 보내서 저장을 해야하는데
+        // -> fetch가 필요하겠다. 저장이니깐 POST해야겠다.
+        // -> payload를 API 스펙에 맞게 만들어 보내야 함
+        const payload = {
+          text: inputText,
+          done: false,
+        }
+        fetchTodos(URL, 'POST', payload)
+          .then(res => {
+            if (res.status === 200 || res.status === 201) {
+              console.log('성공');
+            } else {
+              console.log('실패');
+            }
+          });
       }
-    });
+    } else {
+      e.preventDefault();
+      $textInput.value = '';
+      $textInput.style.background = 'red';
+      $textInput.style.color = 'white';
+      $textInput.placeholder = '30자를 초과할 수 없습니다.';
+    }
+  }
 };
 
-$addBtn.addEventListener('click', addTodoHandler);
+$addBtn.addEventListener('click', e => {
+  addTodoHandler(e);
+});
+
+$addForm.addEventListener('keydown', e => {
+  if (event.isComposing) return;
+  addTodoHandler(e);
+});
+
 
 // step 3. 할 일 삭제 기능
 
@@ -168,6 +200,26 @@ const modifyTodoHandler = e => {
 };
 $todoList.addEventListener('click', modifyTodoHandler);
 
+// 전체 할 일 개수를 세는 함수
+const countTotalTodos = () => {
+  const totalTodos = document.querySelectorAll('.todo-list-item').length;
+  return totalTodos;
+};
+
+// 체크한 할 일 개수를 세는 함수
+const countCheckedTodos = () => {
+  const checkedTodos = document.querySelectorAll('.checkbox input:checked').length;
+  return checkedTodos;
+};
+
+// 할 일 개수를 표시하는 함수
+const displayTodoCount = () => {
+  const $appTitle = document.querySelector('.app-title');
+  const totalTodos = countTotalTodos();
+  const checkedTodos = countCheckedTodos();
+  $appTitle.textContent = `일정 관리 (${checkedTodos} / ${totalTodos}개 완료됨)`;
+};
+
 
 // ================= 앱 실행 =================//
 const init = () => {
@@ -177,5 +229,14 @@ const init = () => {
       renderTodos(todos);
     });
 };
+
+/*
+  1. 할 일 입력 후 엔터쳐도 등록이 되도록… 구현
+
+  2. 아무것도 입력안하거나 스페이바만 쭉치고 입력했을 때 등록 거절
+     ( alert을 띄워도좋고, 모달을 띄워도 좋고, 스타일을 변경해도 좋음 )
+
+  3. 헤더 일정관리 텍스트에   '  일정 관리 (3 / 6개 완료됨) '
+*/
 
 init();
