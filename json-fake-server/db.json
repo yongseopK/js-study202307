@@ -1,0 +1,43 @@
+{
+  "posts": [
+    {
+      "title": "리리리",
+      "body": "라라라",
+      "id": 7
+    },
+    {
+      "title": "dwdq",
+      "body": "dqwdqd",
+      "id": 8
+    },
+    {
+      "title": "dwq2",
+      "body": "d12",
+      "id": 9
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "account": "abc1234",
+      "userName": "김철수"
+    },
+    {
+      "id": 2,
+      "account": "def456",
+      "userName": "박영희"
+    },
+    {
+      "id": 3,
+      "account": "ggg999",
+      "userName": "구구콘"
+    }
+  ],
+  "todos": [
+    {
+      "text": "ddqwd",
+      "done": true,
+      "id": 1
+    }
+  ]
+}
