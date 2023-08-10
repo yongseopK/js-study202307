@@ -55,6 +55,15 @@ const renderTodos = (todoList) => {
 
 // ========== 이벤트 관련 함수 ========== //
 
+const insertTodo = async function (payload) {
+  const res = await fetchTodos(URL, 'POST', payload);
+  if (res.status === 200 || res.status === 201) {
+    console.log('성공');
+  } else {
+    console.log('실패');
+  }
+}
+
 // step 2. 할 일 등록 기능
 const $addBtn = document.getElementById('add');
 
@@ -89,14 +98,7 @@ const addTodoHandler = e => {
           text: inputText,
           done: false,
         }
-        fetchTodos(URL, 'POST', payload)
-          .then(res => {
-            if (res.status === 200 || res.status === 201) {
-              console.log('성공');
-            } else {
-              console.log('실패');
-            }
-          });
+        insertTodo(payload);
       }
     } else {
       e.preventDefault();
@@ -118,6 +120,15 @@ $addForm.addEventListener('keydown', e => {
 });
 
 
+const removeTodo = async (id) => {
+  // 서버에 삭제 요청하기
+  const res = await fetchTodos(`${URL}/${id}`, 'DELETE');
+  if (res.status === 200) {
+    console.log('삭제 성공');
+  } else {
+    console.log('삭제 실패');
+  }
+}
 // step 3. 할 일 삭제 기능
 
 const deleteTodoHandler = e => {
@@ -127,16 +138,7 @@ const deleteTodoHandler = e => {
   // 특정 할 일을 지우기 위해 클릭한 할 일의 id를 알아내야 함
   const id = e.target.closest('.todo-list-item').dataset.id;
   // console.log(id);
-
-  // 서버에 삭제 요청하기
-  fetchTodos(`${URL}/${id}`, 'DELETE')
-    .then(res => {
-      if (res.status === 200) {
-        console.log('삭제 성공');
-      } else {
-        console.log('삭제 실패');
-      }
-    })
+  removeTodo(id);
 };
 $todoList.addEventListener('click', deleteTodoHandler);
 
@@ -149,9 +151,13 @@ const checkTodoHandler = e => {
   // console.log(e.target.checked); // 현재상태지 이전상태가 아니다..!
 
   const id = e.target.closest('.todo-list-item').dataset.id;
-  fetchTodos(`${URL}/${id}`, 'PATCH', {
-    done: e.target.checked,
-  });
+
+  (async () => {
+    const res = await fetchTodos(`${URL}/${id}`, 'PATCH', {
+      done: e.target.checked,
+    });
+  })();
+
 };
 
 $todoList.addEventListener('change', checkTodoHandler);

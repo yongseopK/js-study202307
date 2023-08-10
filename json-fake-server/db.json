@@ -35,19 +35,9 @@
   ],
   "todos": [
     {
-      "text": "가나다",
-      "done": false,
+      "text": "ddqwd",
+      "done": true,
       "id": 1
-    },
-    {
-      "text": "ㄹㄹㄹㄹㄹ",
-      "done": false,
-      "id": 2
-    },
-    {
-      "text": "dwq",
-      "done": false,
-      "id": 3
     }
   ]
 }
